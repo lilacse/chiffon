@@ -8,6 +8,7 @@ import (
 	"github.com/diamondburned/arikawa/v3/gateway"
 	"github.com/google/uuid"
 	"github.com/lilacse/chiffon/handler/messagehandlers/gcm"
+	"github.com/lilacse/chiffon/handler/messagehandlers/mimixd"
 	"github.com/lilacse/chiffon/logger"
 	"github.com/lilacse/chiffon/store"
 )
@@ -28,6 +29,7 @@ func handleMessage(e *gateway.MessageCreateEvent, h *onMessageCreateHandler) {
 
 	handlers := []messageHandler{
 		gcm.NewMaiInfoHandler(h.store).Handle,
+		mimixd.NewInfoHandler(h.store).Handle,
 	}
 
 	defer func() {
