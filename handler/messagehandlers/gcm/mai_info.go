@@ -127,7 +127,7 @@ func (h *maiInfoHandler) Handle(ctx context.Context, e *gateway.MessageCreateEve
 
 	resp.SendReplyToMessage(st, embedbuilder.Info(respEmbed), refMsg)
 
-	return false
+	return true
 }
 
 func parseLevelCc(line string) []levelCc {
