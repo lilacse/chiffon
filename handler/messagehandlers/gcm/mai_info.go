@@ -19,11 +19,6 @@ type maiInfoHandler struct {
 	store *store.Store
 }
 
-type levelCc struct {
-	level string
-	cc    float64
-}
-
 func NewMaiInfoHandler(store *store.Store) *maiInfoHandler {
 	return &maiInfoHandler{
 		store: store,
@@ -52,8 +47,8 @@ func (h *maiInfoHandler) Handle(ctx context.Context, e *gateway.MessageCreateEve
 
 	embed := refMsg.Embeds[0]
 	descLines := strings.Split(embed.Description, "\n")
-	dxCcs := make([]levelCc, 0)
-	stCcs := make([]levelCc, 0)
+	dxCcs := make([]levelDetails, 0)
+	stCcs := make([]levelDetails, 0)
 	isReadDx := false
 	isReadSt := false
 
@@ -130,8 +125,8 @@ func (h *maiInfoHandler) Handle(ctx context.Context, e *gateway.MessageCreateEve
 	return true
 }
 
-func parseLevelCc(line string) []levelCc {
-	var ccs []levelCc
+func parseLevelCc(line string) []levelDetails {
+	var ccs []levelDetails
 	parts := strings.Split(line, " / ")
 
 	levelRegex := regexp.MustCompile(`\[[BAEMR]\]`)
@@ -156,13 +151,13 @@ func parseLevelCc(line string) []levelCc {
 		level := strings.TrimPrefix(strings.TrimSuffix(levelMatch, "]"), "[")
 		cc, _ := strconv.ParseFloat(strings.TrimPrefix(strings.TrimSuffix(ccMatch, ")"), "("), 64)
 
-		ccs = append(ccs, levelCc{level: level, cc: cc})
+		ccs = append(ccs, levelDetails{level: level, cc: cc})
 	}
 
 	return ccs
 }
 
-func mergeLevelCcs(current []levelCc, newCcs []levelCc) []levelCc {
+func mergeLevelCcs(current []levelDetails, newCcs []levelDetails) []levelDetails {
 	for _, newCc := range newCcs {
 		found := false
 		for _, existingCc := range current {
@@ -189,7 +184,7 @@ func calculateRt(cc float64) []int {
 	return results
 }
 
-func writeLevelInfo(sb *strings.Builder, lc levelCc, rts []int) {
+func writeLevelInfo(sb *strings.Builder, lc levelDetails, rts []int) {
 	levelEmoteMap := map[string]string{
 		"B": ":green_square:",
 		"A": ":yellow_square:",

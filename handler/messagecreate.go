@@ -29,6 +29,7 @@ func handleMessage(e *gateway.MessageCreateEvent, h *onMessageCreateHandler) {
 
 	handlers := []messageHandler{
 		gcm.NewMaiInfoHandler(h.store).Handle,
+		gcm.NewDetailedMaiInfoHandler(h.store).Handle,
 		mimixd.NewInfoHandler(h.store).Handle,
 	}
 
